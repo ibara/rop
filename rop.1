@@ -1,0 +1,59 @@
+.\"
+.\" rop - Peephole optimizer that eliminates ROP gadgets
+.\"
+.\" Copyright (c) 2025 Brian Callahan <bcallah@openbsd.org>
+.\"
+.\" Permission to use, copy, modify, and distribute this software for any
+.\" purpose with or without fee is hereby granted, provided that the above
+.\" copyright notice and this permission notice appear in all copies.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+.\" WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+.\" MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+.\" ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+.\" WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+.\" ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+.\" OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.\"
+.Dd September 12, 2025
+.Dt ROP 1
+.Os
+.Sh NAME
+.Nm rop
+.Nd peephole optimizer that eliminates ROP gadgets
+.Sh SYNOPSIS
+.Nm
+.Op Fl o Ar out.s
+.Op Ar in.s
+.Sh DESCRIPTION
+.Nm
+is a utility that scans assembly code for potential Return-oriented
+programming (ROP) gadgets and substitutes safer alternatives.
+.Pp
+By default,
+.Nm
+reads from
+.Ar stdin
+and writes to
+.Ar stdout .
+.Pp
+The options are as follows:
+.Bl -tag -width Ds
+.It Fl o Ar out.s
+Write output to
+.Ar out.s
+instead of
+.Ar stdout .
+.It Fl h
+Print help information and exit.
+.It Fl v
+Print version information.
+.El
+.Sh EXIT STATUS
+The
+.Nm
+utility exits 0 on success, and >0 if an error occurs.
+.Sh AUTHORS
+.Nm
+was written by
+.An Brian Callahan Aq Mt bcallah@openbsd.org .

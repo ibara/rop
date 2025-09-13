@@ -12,18 +12,21 @@ pioneered by Todd Mortimer (mortimer@) in
 [OpenBSD](https://www.openbsd.org/)
 as
 [presented](https://www.openbsd.org/papers/asiabsdcon2019-rop-slides.pdf#page=46.00)
-at AsiaBSDCon 2019.
+at
+[AsiaBSDCon 2019](https://www.openbsd.org/papers/asiabsdcon2019-rop-paper.pdf).
 
 Building
 --------
+`rop` is written in
+[D](https://dlang.org/).
+The `configure` script will find a suitable D compiler
+automatically.
+
 ```sh
+$ ./configure
 $ make
+$ sudo make install
 ```
-or
-```sh
-$ make CC=gcc
-```
-to use a C compiler of your specification.
 
 Usage
 -----
