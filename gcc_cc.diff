@@ -1,0 +1,40 @@
+--- gcc/gcc.cc.orig	2025-09-21 11:32:20.088316292 -0400
++++ gcc/gcc.cc	2025-09-21 11:32:25.805416836 -0400
+@@ -1314,12 +1314,12 @@
+ #ifdef AS_NEEDS_DASH_FOR_PIPED_INPUT
+ "%{!fwpa*:\
+    %{fcompare-debug=*|fdump-final-insns=*:%:compare-debug-dump-opt()}\
+-   %{!S:-o %|.s |\n as %(asm_options) %|.s %A }\
++   %{!S:-o %|.s |\n opt %{v} -o %|.s %m.s |\n as %(asm_options) %|.s %A }\
+   }";
+ #else
+ "%{!fwpa*:\
+    %{fcompare-debug=*|fdump-final-insns=*:%:compare-debug-dump-opt()}\
+-   %{!S:-o %|.s |\n as %(asm_options) %m.s %A }\
++   %{!S:-o %|.s |\n opt %{v} -o %|.s %m.s |\n as %(asm_options) %m.s %A }\
+   }";
+ #endif
+ 
+@@ -1492,7 +1492,7 @@
+    "%{!M:%{!MM:%{!E:cc1 -fpreprocessed %i %(cc1_options) %{!fsyntax-only:%(invoke_as)}}}}", 0, 0, 0},
+   {".s", "@assembler", 0, 0, 0},
+   {"@assembler",
+-   "%{!M:%{!MM:%{!E:%{!S:as %(asm_debug) %(asm_options) %i %A }}}}", 0, 0, 0},
++   "%{!M:%{!MM:%{!E:%{!S:opt %{v} -o %i %i |\n as %(asm_debug) %(asm_options) %i %A }}}}", 0, 0, 0},
+   {".sx", "@assembler-with-cpp", 0, 0, 0},
+   {".S", "@assembler-with-cpp", 0, 0, 0},
+   {"@assembler-with-cpp",
+@@ -1500,11 +1500,13 @@
+    "%(trad_capable_cpp) -lang-asm %(cpp_options) -fno-directives-only\
+       %{E|M|MM:%(cpp_debug_options)}\
+       %{!M:%{!MM:%{!E:%{!S:-o %|.s |\n\
++       opt %{v} -o %|.s %m.s |\n\
+        as %(asm_debug) %(asm_options) %|.s %A }}}}"
+ #else
+    "%(trad_capable_cpp) -lang-asm %(cpp_options) -fno-directives-only\
+       %{E|M|MM:%(cpp_debug_options)}\
+       %{!M:%{!MM:%{!E:%{!S:-o %|.s |\n\
++       opt %{v} -o %|.s %m.s |\n\
+        as %(asm_debug) %(asm_options) %m.s %A }}}}"
+ #endif
+    , 0, 0, 0},

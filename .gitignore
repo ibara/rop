@@ -1,0 +1,13 @@
+Makefile
+opt
+main.o
+opt.o
+opt.core
+sqlite3.s
+out.txt
+timing
+timing.o
+a.out
+config.d
+config.o
+stats
