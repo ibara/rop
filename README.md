@@ -1,11 +1,11 @@
-opt
+rop
 ===
-`opt` is a utility that can act as an optimization pass for
+`rop` is a utility that can act as an optimization pass for
 [GCC](https://gcc.gnu.org/)
 to remove potential polymorphic ROP gadgets on 32-bit and
 64-bit x86 CPUs.
 
-`opt` is conceptually similar to an
+`rop` is conceptually similar to an
 [LLVM](https://llvm.org/)
 [fixup pass](https://github.com/openbsd/src/blob/master/gnu/llvm/llvm/lib/Target/X86/X86FixupGadgets.cpp)
 pioneered by Todd Mortimer (mortimer@) in
@@ -18,7 +18,7 @@ and the `-mmitigate-rop` flag that used to exist in GCC.
 
 Building
 --------
-`opt` is written in
+`rop` is written in
 [D](https://dlang.org/).
 The `configure` script will find a suitable D compiler
 automatically.
@@ -32,22 +32,22 @@ $ sudo make install
 Usage
 -----
 You can modify your make rules to insert an invocation of
-`opt` in the appropriate place.
+`rop` in the appropriate place.
 
 For example, for C files:
 ```make
 .c.o:
-	${CC} ${CFLAGS} ${CPPFLAGS} -o- -S $< | opt | ${CC} -o $@ -c -x assembler -
+	${CC} ${CFLAGS} ${CPPFLAGS} -o- -S $< | rop | ${CC} -o $@ -c -x assembler -
 ```
 
 Alternatively, you must modify your copy of GCC to insert
-an invocation of `opt` between the output of the compiler
+an invocation of `rop` between the output of the compiler
 pass (`cc1`, `cc1plus`, etc.) and the assembler. A patch to
 do that for GCC 15.2.0 is
 [available](https://github.com/ibara/rop/blob/main/gcc_cc.diff).
 
 GCC 15.2.0 is able to complete a 3-stage compiler build of
-itself on FreeBSD/amd64 15.0-RELEASE with `opt` having appiled
+itself on FreeBSD/amd64 15.0-RELEASE with `rop` having appiled
 the above patch using the following compiler invocation:
 ```sh
 ../gcc-15.2.0/configure --prefix=/opt/rop --enable-languages=c,c++,d --with-included-gettext --with-as=/usr/local/bin/as --with-ld=/usr/local/bin/ld --enable-gnu-indirect-function --disable-libssp --disable-multilib

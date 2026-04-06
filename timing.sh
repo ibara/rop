@@ -11,7 +11,7 @@ fi
 i=0
 
 while [ $i -lt $total ] ; do
-  (/usr/bin/time -p ./opt sqlite3.s > /dev/null) 2>> out.txt
+  (/usr/bin/time -p ./rop sqlite3.s > /dev/null) 2>> out.txt
   i=$((i+1))
 done
 

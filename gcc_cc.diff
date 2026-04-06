@@ -5,13 +5,13 @@
  "%{!fwpa*:\
     %{fcompare-debug=*|fdump-final-insns=*:%:compare-debug-dump-opt()}\
 -   %{!S:-o %|.s |\n as %(asm_options) %|.s %A }\
-+   %{!S:-o %|.s |\n opt %{v} -o %|.s %m.s |\n as %(asm_options) %|.s %A }\
++   %{!S:-o %|.s |\n rop %{v} -o %|.s %m.s |\n as %(asm_options) %|.s %A }\
    }";
  #else
  "%{!fwpa*:\
     %{fcompare-debug=*|fdump-final-insns=*:%:compare-debug-dump-opt()}\
 -   %{!S:-o %|.s |\n as %(asm_options) %m.s %A }\
-+   %{!S:-o %|.s |\n opt %{v} -o %|.s %m.s |\n as %(asm_options) %m.s %A }\
++   %{!S:-o %|.s |\n rop %{v} -o %|.s %m.s |\n as %(asm_options) %m.s %A }\
    }";
  #endif
  
@@ -20,7 +20,7 @@
    {".s", "@assembler", 0, 0, 0},
    {"@assembler",
 -   "%{!M:%{!MM:%{!E:%{!S:as %(asm_debug) %(asm_options) %i %A }}}}", 0, 0, 0},
-+   "%{!M:%{!MM:%{!E:%{!S:opt %{v} -o %i %i |\n as %(asm_debug) %(asm_options) %i %A }}}}", 0, 0, 0},
++   "%{!M:%{!MM:%{!E:%{!S:rop %{v} -o %i %i |\n as %(asm_debug) %(asm_options) %i %A }}}}", 0, 0, 0},
    {".sx", "@assembler-with-cpp", 0, 0, 0},
    {".S", "@assembler-with-cpp", 0, 0, 0},
    {"@assembler-with-cpp",
@@ -28,13 +28,13 @@
     "%(trad_capable_cpp) -lang-asm %(cpp_options) -fno-directives-only\
        %{E|M|MM:%(cpp_debug_options)}\
        %{!M:%{!MM:%{!E:%{!S:-o %|.s |\n\
-+       opt %{v} -o %|.s %m.s |\n\
++       rop %{v} -o %|.s %m.s |\n\
         as %(asm_debug) %(asm_options) %|.s %A }}}}"
  #else
     "%(trad_capable_cpp) -lang-asm %(cpp_options) -fno-directives-only\
        %{E|M|MM:%(cpp_debug_options)}\
        %{!M:%{!MM:%{!E:%{!S:-o %|.s |\n\
-+       opt %{v} -o %|.s %m.s |\n\
++       rop %{v} -o %|.s %m.s |\n\
         as %(asm_debug) %(asm_options) %m.s %A }}}}"
  #endif
     , 0, 0, 0},

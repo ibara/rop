@@ -21,7 +21,7 @@ import std.stdio;
 import std.string;
 import std.uni;
 
-import opt.config;
+import rop.config;
 
 class Rop {
     private string dest, insn, output, sib, src;
@@ -868,7 +868,7 @@ done:
 
 int main(string[] args) {
     int usage() {
-        stderr.writeln("usage: opt [-h] [-v] [-o out.s] [in.s]");
+        stderr.writeln("usage: rop [-h] [-v] [-o out.s] [in.s]");
         return 1;
     }
 
