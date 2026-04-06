@@ -155,7 +155,7 @@ EOF
   fi
 }
 
-version="2.35"
+version="2.36"
 
 # Option variables
 if [ ! -z "$PREFIX" ] ; then

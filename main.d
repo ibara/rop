@@ -702,9 +702,9 @@ class Rop {
             this.ain("\t" ~ this.insn ~ "\t%r11d, %r8d\n");
             this.ain("\txchgq\t%r11, %r8\n");
         } else if (this.dest == "%rbx" && this.src == "%r8") {
-            this.ain("\txchgq\t%r8, %rbx\n");
+            this.ain("\txchgq\t%rbx, %r8\n");
             this.ain("\t" ~ this.insn ~ "\t%rbx, %r8\n");
-            this.ain("\txchgq\t%r8, %rbx\n");
+            this.ain("\txchgq\t%rbx, %r8\n");
         } else if (this.dest == "%r11" && this.src == "%r8") {
             this.ain("\txchgq\t%r8, %r11\n");
             this.ain("\t" ~ this.insn ~ "\t%r11, %r8\n");
@@ -714,17 +714,17 @@ class Rop {
             this.ain("\t" ~ this.insn ~ "\t%r11d, %eax\n");
             this.ain("\txchgq\t%r11, %rax\n");
         } else if (this.dest == "%ebx" && this.src == "%r8d") {
-            this.ain("\txchgq\t%r8, %rbx\n");
+            this.ain("\txchgq\t%rbx, %r8\n");
             this.ain("\t" ~ this.insn ~ "\t%ebx, %r8d\n");
-            this.ain("\txchgq\t%r8, %rbx\n");
+            this.ain("\txchgq\t%rbx, %r8\n");
         } else if (this.dest == "%bx" && this.src == "%r8w") {
-            this.ain("\txchgq\t%r8, %rbx\n");
+            this.ain("\txchgq\t%rbx, %r8\n");
             this.ain("\t" ~ this.insn ~ "\t%bx, %r8w\n");
-            this.ain("\txchgq\t%r8, %rbx\n");
+            this.ain("\txchgq\t%rbx, %r8\n");
         } else if (this.dest == "%bl" && this.src == "%r8b") {
-            this.ain("\txchgq\t%r8, %rbx\n");
+            this.ain("\txchgq\t%rbx, %r8\n");
             this.ain("\t" ~ this.insn ~ "\t%bl, %r8b\n");
-            this.ain("\txchgq\t%r8, %rbx\n");
+            this.ain("\txchgq\t%rbx, %r8\n");
         } else {
             this.ain(xchgq);
             this.ain("\t" ~ this.insn ~ "\t" ~ this.dest ~ ", " ~ this.src ~ "\n");
