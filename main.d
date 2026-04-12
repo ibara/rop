@@ -868,7 +868,7 @@ done:
 
 int main(string[] args) {
     int usage() {
-        stderr.writeln("usage: rop [-h] [-v] [-o out.s] [in.s]");
+        stderr.writeln("usage: rop [-h] [-v] [-o out.s] [in.s ...]");
         return 1;
     }
 
