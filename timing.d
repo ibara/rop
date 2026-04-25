@@ -14,7 +14,7 @@ string stddev(real[] vals, real mean) {
         sumSquares += diff * diff;
     }
 
-    return to!string(sqrt(sumSquares / vals.length));
+    return to!string(sqrt(sumSquares / (vals.length - 1)));
 }
 
 void main(string[] args) {
