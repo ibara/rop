@@ -2,8 +2,7 @@ rop
 ===
 `rop` is a utility that can act as an optimization pass for
 [GCC](https://gcc.gnu.org/)
-to remove potential polymorphic ROP gadgets on 32-bit and
-64-bit x86 CPUs.
+to remove potential polymorphic ROP gadgets on x86_64 CPUs.
 
 `rop` is conceptually similar to an
 [LLVM](https://llvm.org/)
