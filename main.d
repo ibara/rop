@@ -746,6 +746,18 @@ class Rop {
             return false;
         }
 
+        if ((this.dest == "%rbx" || this.dest == "%rdx") && (this.src == "%rcx" || this.src == "%r9")) {
+            if (this.is_basic_64_bit_reg_reg_arithmetic())
+                return true;
+            return false;
+        }
+
+        if ((this.dest == "%r10" || this.dest == "%r11") && (this.src == "%rcx" || this.src == "%r9")) {
+            if (this.is_basic_64_bit_reg_reg_arithmetic())
+                return true;
+            return false;
+        }
+
         if ((this.dest == "%ebx" || this.dest == "%edx") && (this.src == "%eax" || this.src == "%r8d")) {
             if (this.is_basic_32_bit_reg_reg_arithmetic())
                 return true;
@@ -753,6 +765,18 @@ class Rop {
         }
 
         if ((this.dest == "%r10d" || this.dest == "%r11d") && (this.src == "%eax" || this.src == "%r8d")) {
+            if (this.is_basic_32_bit_reg_reg_arithmetic())
+                return true;
+            return false;
+        }
+
+        if ((this.dest == "%ebx" || this.dest == "%edx") && (this.src == "%ecx" || this.src == "%r9d")) {
+            if (this.is_basic_32_bit_reg_reg_arithmetic())
+                return true;
+            return false;
+        }
+
+        if ((this.dest == "%r10d" || this.dest == "%r11d") && (this.src == "%ecx" || this.src == "%r9d")) {
             if (this.is_basic_32_bit_reg_reg_arithmetic())
                 return true;
             return false;
@@ -770,6 +794,18 @@ class Rop {
             return false;
         }
 
+        if ((this.dest == "%bx" || this.dest == "%dx") && (this.src == "%cx" || this.src == "%r9w")) {
+            if (this.is_basic_16_bit_reg_reg_arithmetic())
+                return true;
+            return false;
+        }
+
+        if ((this.dest == "%r10w" || this.dest == "%r11w") && (this.src == "%cx" || this.src == "%r9w")) {
+            if (this.is_basic_16_bit_reg_reg_arithmetic())
+                return true;
+            return false;
+        }
+
         if ((this.dest == "%bl" || this.dest == "%dl") && (this.src == "%al" || this.src == "%r8b")) {
             if (this.is_basic_8_bit_reg_reg_arithmetic())
                 return true;
@@ -777,6 +813,18 @@ class Rop {
         }
 
         if ((this.dest == "%r10b" || this.dest == "%r11b") && (this.src == "%al" || this.src == "%r8b")) {
+            if (this.is_basic_8_bit_reg_reg_arithmetic())
+                return true;
+            return false;
+        }
+
+        if ((this.dest == "%bl" || this.dest == "%dl") && (this.src == "%cl" || this.src == "%r9b")) {
+            if (this.is_basic_8_bit_reg_reg_arithmetic())
+                return true;
+            return false;
+        }
+
+        if ((this.dest == "%r10b" || this.dest == "%r11b") && (this.src == "%cl" || this.src == "%r9b")) {
             if (this.is_basic_8_bit_reg_reg_arithmetic())
                 return true;
             return false;
