@@ -25,7 +25,6 @@ import rop.config;
 
 class Rop {
     private string dest, insn, output, sib, src;
-    private string xchgq = "\txchgq\t%rbx, %rax\n";
 
     @safe pure nothrow void ain(string s) {
         this.output ~= s;
@@ -528,38 +527,256 @@ class Rop {
         }
     }
 
+    @safe @nogc pure nothrow string reg_to_64_bit_reg(string s) {
+        switch (s) {
+        case "%rbx":
+        case "%ebx":
+        case "%bx":
+        case "%bl":
+            return "%rbx";
+        case "%rcx":
+        case "%ecx":
+        case "%cx":
+        case "%cl":
+            return "%rcx";
+        case "%rdx":
+        case "%edx":
+        case "%dx":
+        case "%dl":
+            return "%rdx";
+        case "%r8":
+        case "%r8d":
+        case "%r8w":
+        case "%r8b":
+            return "%r8";
+        case "%r9":
+        case "%r9d":
+        case "%r9w":
+        case "%r9b":
+            return "%r9";
+        case "%r10":
+        case "%r10d":
+        case "%r10w":
+        case "%r10b":
+            return "%r10";
+        case "%r11":
+        case "%r11d":
+        case "%r11w":
+        case "%r11b":
+            return "%r11";
+        default:
+            return "%rax";
+        }
+    }
+
+    @safe @nogc pure nothrow string reg_to_32_bit_reg(string s) {
+        switch (s) {
+        case "%rbx":
+        case "%ebx":
+        case "%bx":
+        case "%bl":
+            return "%ebx";
+        case "%rcx":
+        case "%ecx":
+        case "%cx":
+        case "%cl":
+            return "%ecx";
+        case "%rdx":
+        case "%edx":
+        case "%dx":
+        case "%dl":
+            return "%edx";
+        case "%r8":
+        case "%r8d":
+        case "%r8w":
+        case "%r8b":
+            return "%r8d";
+        case "%r9":
+        case "%r9d":
+        case "%r9w":
+        case "%r9b":
+            return "%r9d";
+        case "%r10":
+        case "%r10d":
+        case "%r10w":
+        case "%r10b":
+            return "%r10d";
+        case "%r11":
+        case "%r11d":
+        case "%r11w":
+        case "%r11b":
+            return "%r11d";
+        default:
+            return "%eax";
+        }
+    }
+
+    @safe @nogc pure nothrow string reg_to_16_bit_reg(string s) {
+        switch (s) {
+        case "%rbx":
+        case "%ebx":
+        case "%bx":
+        case "%bl":
+            return "%bx";
+        case "%rcx":
+        case "%ecx":
+        case "%cx":
+        case "%cl":
+            return "%cx";
+        case "%rdx":
+        case "%edx":
+        case "%dx":
+        case "%dl":
+            return "%dx";
+        case "%r8":
+        case "%r8d":
+        case "%r8w":
+        case "%r8b":
+            return "%r8w";
+        case "%r9":
+        case "%r9d":
+        case "%r9w":
+        case "%r9b":
+            return "%r9w";
+        case "%r10":
+        case "%r10d":
+        case "%r10w":
+        case "%r10b":
+            return "%r10w";
+        case "%r11":
+        case "%r11d":
+        case "%r11w":
+        case "%r11b":
+            return "%r11w";
+        default:
+            return "%ax";
+        }
+    }
+
+    @safe @nogc pure nothrow string reg_to_8_bit_reg(string s) {
+        switch (s) {
+        case "%rbx":
+        case "%ebx":
+        case "%bx":
+        case "%bl":
+            return "%bl";
+        case "%rcx":
+        case "%ecx":
+        case "%cx":
+        case "%cl":
+            return "%cl";
+        case "%rdx":
+        case "%edx":
+        case "%dx":
+        case "%dl":
+            return "%dl";
+        case "%r8":
+        case "%r8d":
+        case "%r8w":
+        case "%r8b":
+            return "%r8b";
+        case "%r9":
+        case "%r9d":
+        case "%r9w":
+        case "%r9b":
+            return "%r9b";
+        case "%r10":
+        case "%r10d":
+        case "%r10w":
+        case "%r10b":
+            return "%r10b";
+        case "%r11":
+        case "%r11d":
+        case "%r11w":
+        case "%r11b":
+            return "%r11b";
+        default:
+            return "%al";
+        }
+    }
+
+    @safe @nogc pure nothrow int reg_size(string s) {
+        switch (s) {
+        case "%eax":
+        case "%ebx":
+        case "%ecx":
+        case "%edx":
+        case "%r8d":
+        case "%r9d":
+        case "%r10d":
+        case "%r11d":
+            return 32;
+        case "%ax":
+        case "%bx":
+        case "%cx":
+        case "%dx":
+        case "%r8w":
+        case "%r9w":
+        case "%r10w":
+        case "%r11w":
+            return 16;
+        case "%al":
+        case "%bl":
+        case "%cl":
+        case "%dl":
+        case "%r8b":
+        case "%r9b":
+        case "%r10b":
+        case "%r11b":
+            return 8;
+        default:
+            return 64;
+        }
+    }
+
+    @safe pure nothrow string xchgq(string s, string d) {
+        return "\txchgq\t" ~ reg_to_64_bit_reg(d) ~ ", " ~ reg_to_64_bit_reg(s) ~ "\n";
+    }
+
     @safe @nogc pure nothrow bool is_unsafe() {
-        if (this.dest == "%rbx" && (this.src == "%rax" || this.src == "%r8")) {
+        if ((this.dest == "%rbx" || this.dest == "%rdx") && (this.src == "%rax" || this.src == "%r8")) {
             if (this.is_basic_64_bit_reg_reg_arithmetic())
                 return true;
             return false;
         }
 
-        if (this.dest == "%r11" && (this.src == "%rax" || this.src == "%r8")) {
+        if ((this.dest == "%r10" || this.dest == "%r11") && (this.src == "%rax" || this.src == "%r8")) {
             if (this.is_basic_64_bit_reg_reg_arithmetic())
                 return true;
             return false;
         }
 
-        if (this.dest == "%ebx" && (this.src == "%eax" || this.src == "%r8d")) {
+        if ((this.dest == "%ebx" || this.dest == "%edx") && (this.src == "%eax" || this.src == "%r8d")) {
             if (this.is_basic_32_bit_reg_reg_arithmetic())
                 return true;
             return false;
         }
 
-        if (this.dest == "%r11d" && (this.src == "%eax" || this.src == "%r8d")) {
+        if ((this.dest == "%r10d" || this.dest == "%r11d") && (this.src == "%eax" || this.src == "%r8d")) {
             if (this.is_basic_32_bit_reg_reg_arithmetic())
                 return true;
             return false;
         }
 
-        if (this.dest == "%bx" && (this.src == "%ax" || this.src == "%r8w")) {
+        if ((this.dest == "%bx" || this.dest == "%dx") && (this.src == "%ax" || this.src == "%r8w")) {
             if (this.is_basic_16_bit_reg_reg_arithmetic())
                 return true;
             return false;
         }
 
-        if (this.dest == "%bl" && (this.src == "%al" || this.src == "%r8b")) {
+        if ((this.dest == "%r10w" || this.dest == "%r11w") && (this.src == "%ax" || this.src == "%r8w")) {
+            if (this.is_basic_16_bit_reg_reg_arithmetic())
+                return true;
+            return false;
+        }
+
+        if ((this.dest == "%bl" || this.dest == "%dl") && (this.src == "%al" || this.src == "%r8b")) {
+            if (this.is_basic_8_bit_reg_reg_arithmetic())
+                return true;
+            return false;
+        }
+
+        if ((this.dest == "%r10b" || this.dest == "%r11b") && (this.src == "%al" || this.src == "%r8b")) {
             if (this.is_basic_8_bit_reg_reg_arithmetic())
                 return true;
             return false;
@@ -647,22 +864,16 @@ class Rop {
     }
 
     @safe pure nothrow void xchg_and_immediate() {
-        if (this.dest[2] == '1')
-            this.ain("\txchgq\t%r11, %rax\n");
-        else
-            this.ain(xchgq);
+        this.ain(this.xchgq(this.src, this.dest));
         this.ain("\t" ~ this.insn ~ "\t" ~ this.src ~ ", ");
-        switch (this.dest) {
-        case "%ebx":
-        case "%r11d":
+        switch (this.reg_size(this.dest)) {
+        case 32:
             this.ain("%eax");
             break;
-        case "%bx":
-        case "%r11w":
+        case 16:
             this.ain("%ax");
             break;
-        case "%bl":
-        case "%r11b":
+        case 8:
             this.ain("%al");
             break;
         default:
@@ -670,72 +881,49 @@ class Rop {
             break;
         }
         this.ain("\n");
-        if (this.dest[2] == '1')
-            this.ain("\txchgq\t%r11, %rax\n");
-        else
-            this.ain(xchgq);
+        this.ain(this.xchgq(this.src, this.dest));
     }
 
     @safe pure nothrow void xchg_and_op() {
-        if (this.dest == "%rax" && this.src == "%ebx") {
-            this.ain(xchgq);
-            this.ain("\t" ~ this.insn ~ "\t%eax, %rbx\n");
-            this.ain(xchgq);
-        } else if (this.dest == "%r11" && this.src == "%rax") {
-            this.ain("\txchgq\t%r11, %rax\n");
-            this.ain("\t" ~ this.insn ~ "\t%r11, %rax\n");
-            this.ain("\txchgq\t%r11, %rax\n");
-        } else if (this.dest == "%rax" && this.src == "%r11d") {
-            this.ain("\txchgq\t%r11, %rax\n");
-            this.ain("\t" ~ this.insn ~ "\t%eax, %r11\n");
-            this.ain("\txchgq\t%r11, %rax\n");
-        } else if (this.dest == "%eax" && this.src == "%bl") {
-            this.ain(xchgq);
-            this.ain("\t" ~ this.insn ~ "\t%al, %ebx\n");
-            this.ain(xchgq);
-        } else if (this.dest == "%eax" && this.src == "%r11b") {
-            this.ain("\txchgq\t%r11, %rax\n");
-            this.ain("\t" ~ this.insn ~ "\t%al, %r11d\n");
-            this.ain("\txchgq\t%r11, %rax\n");
-        } else if (this.dest == "%r11d" && this.src == "%r8d") {
-            this.ain("\txchgq\t%r11, %r8\n");
-            this.ain("\t" ~ this.insn ~ "\t%r11d, %r8d\n");
-            this.ain("\txchgq\t%r11, %r8\n");
-        } else if (this.dest == "%rbx" && this.src == "%r8") {
-            this.ain("\txchgq\t%rbx, %r8\n");
-            this.ain("\t" ~ this.insn ~ "\t%rbx, %r8\n");
-            this.ain("\txchgq\t%rbx, %r8\n");
-        } else if (this.dest == "%r11" && this.src == "%r8") {
-            this.ain("\txchgq\t%r8, %r11\n");
-            this.ain("\t" ~ this.insn ~ "\t%r11, %r8\n");
-            this.ain("\txchgq\t%r8, %r11\n");
-        } else if (this.dest == "%r11d" && this.src == "%eax") {
-            this.ain("\txchgq\t%r11, %rax\n");
-            this.ain("\t" ~ this.insn ~ "\t%r11d, %eax\n");
-            this.ain("\txchgq\t%r11, %rax\n");
-        } else if (this.dest == "%ebx" && this.src == "%r8d") {
-            this.ain("\txchgq\t%rbx, %r8\n");
-            this.ain("\t" ~ this.insn ~ "\t%ebx, %r8d\n");
-            this.ain("\txchgq\t%rbx, %r8\n");
-        } else if (this.dest == "%bx" && this.src == "%r8w") {
-            this.ain("\txchgq\t%rbx, %r8\n");
-            this.ain("\t" ~ this.insn ~ "\t%bx, %r8w\n");
-            this.ain("\txchgq\t%rbx, %r8\n");
-        } else if (this.dest == "%bl" && this.src == "%r8b") {
-            this.ain("\txchgq\t%rbx, %r8\n");
-            this.ain("\t" ~ this.insn ~ "\t%bl, %r8b\n");
-            this.ain("\txchgq\t%rbx, %r8\n");
-        } else {
-            this.ain(xchgq);
-            this.ain("\t" ~ this.insn ~ "\t" ~ this.dest ~ ", " ~ this.src ~ "\n");
-            this.ain(xchgq);
+        this.ain(this.xchgq(this.src, this.dest));
+        this.ain("\t" ~ this.insn ~ "\t");
+        switch (this.reg_size(this.src)) {
+        case 32:
+            this.ain(this.reg_to_32_bit_reg(this.dest));
+            break;
+        case 16:
+            this.ain(this.reg_to_16_bit_reg(this.dest));
+            break;
+        case 8:
+            this.ain(this.reg_to_8_bit_reg(this.dest));
+            break;
+        default:
+            this.ain(this.reg_to_64_bit_reg(this.dest));
+            break;
         }
+        this.ain(", ");
+        switch (this.reg_size(this.dest)) {
+        case 32:
+            this.ain(this.reg_to_32_bit_reg(this.src));
+            break;
+        case 16:
+            this.ain(this.reg_to_16_bit_reg(this.src));
+            break;
+        case 8:
+            this.ain(this.reg_to_8_bit_reg(this.src));
+            break;
+        default:
+            this.ain(this.reg_to_64_bit_reg(this.src));
+            break;
+        }
+        this.ain("\n");
+        this.ain(this.xchgq(this.src, this.dest));
     }
 
     @safe pure nothrow void xchg_and_src_sib() {
         if (sib.empty)
             sib = "(%rax,%rbx,8)";
-        this.ain(xchgq);
+        this.ain(this.xchgq(this.src, this.dest));
         switch (this.dest) {
         case "%rax":
             this.ain("\t" ~ this.insn ~ "\t" ~ sib ~ ", %rbx\n");
@@ -746,13 +934,13 @@ class Rop {
         default:
             this.ain("\t" ~ this.insn ~ "\t" ~ sib ~ ", " ~ this.dest ~ "\n");
         }
-        this.ain(xchgq);
+        this.ain(this.xchgq(this.src, this.dest));
     }
 
     @safe pure nothrow void xchg_and_dest_sib() {
         if (sib.empty)
             sib = "(%rax,%rbx,8)";
-        this.ain(xchgq);
+        this.ain(this.xchgq(this.src, this.dest));
         switch (this.src) {
         case "%rax":
             this.ain("\t" ~ this.insn ~ "\t" ~ "%rbx, " ~ sib ~ "\n");
@@ -763,19 +951,13 @@ class Rop {
         default:
             this.ain("\t" ~ this.insn ~ "\t" ~ this.src ~ ", " ~ sib ~ "\n");
         }
-        this.ain(xchgq);
+        this.ain(this.xchgq(this.src, this.dest));
     }
 
     @safe pure nothrow void xchg_and_setcc() {
-        if (this.src == "%r11b")
-            this.ain("\txchgq\t%r11, %rax\n");
-        else
-            this.ain(xchgq);
+        this.ain(this.xchgq(this.src, this.dest));
         this.ain("\t" ~ this.insn ~ "\t%al\n");
-        if (this.src == "%r11b")
-            this.ain("\txchgq\t%r11, %rax\n");
-        else
-            this.ain(xchgq);
+        this.ain(this.xchgq(this.src, this.dest));
     }
 
     @safe pure nothrow void process(string line) {
